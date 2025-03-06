@@ -17,7 +17,6 @@ mysql -u root -p <<EOF
 DROP DATABASE glpi;
 DROP USER 'glpiuser'@'localhost';
 FLUSH PRIVILEGES;
-EXIT;
 EOF
 
 # Remover diretórios do GLPI

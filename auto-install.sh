@@ -20,7 +20,6 @@ CREATE DATABASE glpi CHARACTER SET utf8mb4;
 CREATE USER 'glpiuser'@'localhost' IDENTIFIED BY '$DB_PASSWORD';
 GRANT ALL PRIVILEGES ON glpi.* TO 'glpiuser'@'localhost';
 FLUSH PRIVILEGES;
-EXIT;
 EOF
 
 # Download e extração do GLPI
