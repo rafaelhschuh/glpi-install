@@ -8,9 +8,14 @@ Execute o seguinte comando no terminal e siga as instruções
 ```bash
 sudo bash -c "$(wget -qLO - https://raw.githubusercontent.com/rafaelhschuh/glpi-install/refs/heads/main/auto-install.sh)"
 ```
-
+---
 
 # Instalação Manual
+---
+## Antes, acesse o terminal de root:
+```bash
+sudo su
+```
 ---
 
 ## Passo 1: Atualização do Sistema
@@ -38,8 +43,8 @@ apt install -y apache2 mariadb-server php php-{cli,apache2,gd,imap,ldap,mysql,xm
 Configure o fuso horário e, se desejar, instale o NTP para sincronização de hora.
 
 ```bash
-dpkg-reconfigure tzdata
 apt install -y openntpd && systemctl enable openntpd && systemctl start openntpd
+dpkg-reconfigure tzdata
 ```
 
 ---

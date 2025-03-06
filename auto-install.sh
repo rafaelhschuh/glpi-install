@@ -9,6 +9,10 @@ read DB_PASSWORD
 # Atualização do sistema
 apt update && apt upgrade -y
 
+# Configurar data e hora
+apt install -y openntpd && systemctl enable openntpd && systemctl start openntpd
+dpkg-reconfigure tzdata
+
 # Instalação dos pacotes necessários
 apt install -y apache2 mariadb-server php php-cli php-gd php-imap php-ldap php-mysql php-xml php-mbstring php-xmlrpc php-zip php-bcmath php-intl php-bz2 php-redis wget unzip curl php-curl
 # Configuração segura do MariaDB
