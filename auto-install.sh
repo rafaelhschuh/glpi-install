@@ -3,7 +3,11 @@
 # Solicita o IP/Domínio e senha do banco de dados
 echo "Informe o IP ou Domínio para acessar o GLPI:"
 read SERVER_NAME
-echo "Informe a senha para o usuário do banco de dados GLPI:"
+echo "Informe o nome do banco de dados do GLPI:"
+read DB_NAME
+echo "Informe o nome de usuário para o banco de dados do GLPI:"
+read DB_USER
+echo "Informe a senha para o usuário do banco de dados do GLPI:"
 read DB_PASSWORD
 
 # Atualização do sistema
@@ -20,9 +24,9 @@ mysql_secure_installation
 
 # Criação do banco de dados e usuário
 mysql -u root -p <<EOF
-CREATE DATABASE glpi CHARACTER SET utf8mb4;
-CREATE USER 'glpiuser'@'localhost' IDENTIFIED BY '$DB_PASSWORD';
-GRANT ALL PRIVILEGES ON glpi.* TO 'glpiuser'@'localhost';
+CREATE DATABASE $DB_NAME CHARACTER SET utf8mb4;
+CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASSWORD';
+GRANT ALL PRIVILEGES ON glpi.* TO '$DB_USER'@'localhost';
 FLUSH PRIVILEGES;
 EOF
 
@@ -79,6 +83,6 @@ systemctl restart apache2
 
 # Exibe mensagem final
 echo "Instalação concluída! Acesse http://$SERVER_NAME/install/install.php para finalizar a configuração pelo navegador."
-echo "Banco de dados: localhost || Usuário: glpiuser || Senha: $DB_PASSWORD"
+echo "Banco de dados: localhost || Banco de dados: $DB_NAME || Usuário: $DB_USER || Senha: $DB_PASSWORD"
 echo "Lembre-se de remover o diretório de instalação após concluir a configuração: rm -rf /var/www/html/glpi/install"
 
