@@ -175,7 +175,7 @@ rm -rf /var/www/html/glpi/install
 Execute o seguinte comando no terminal para remover o glpi e suas dependências
 ```bash
 sudo bash -c "$(wget -qLO - https://raw.githubusercontent.com/rafaelhschuh/glpi-install/refs/heads/main/auto-remove.sh)"
-
+```
 
 
 Este README.md reúne os passos para uma instalação funcional do GLPI no Debian. Certifique-se de ajustar os valores conforme necessário e consulte a documentação oficial do GLPI para detalhes adicionais e atualizações.
