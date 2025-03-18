@@ -11,7 +11,7 @@ sudo bash -c "$(wget -qLO - https://raw.githubusercontent.com/rafaelhschuh/glpi-
 ---
 
 # Instalação Manual
----
+
 ## Antes, acesse o terminal de root:
 ```bash
 sudo su
