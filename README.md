@@ -1,26 +1,32 @@
-# Guia de Instalação do GLPI no Debian
+# 📦 GLPI Installation on Debian
 
-Este documento reúne todos os passos necessários para instalar o GLPI no Debian, incluindo a configuração do Apache, MariaDB, PHP e ajustes de permissões. 
+This guide explains how to install and configure **GLPI** on Debian. You can choose between **automated** or **manual** installation.
 
-# Instalação Automatizada
+---
 
-Execute o seguinte comando no terminal e siga as instruções
+## ⚡ Automated Installation
+
+Run the command below to install GLPI automatically:
+
 ```bash
 sudo bash -c "$(wget -qLO - https://raw.githubusercontent.com/rafaelhschuh/glpi-install/refs/heads/main/auto-install.sh)"
 ```
+
 ---
 
-# Instalação Manual
+## 🧰 Manual Installation
 
-## Antes, acesse o terminal de root:
+Follow the steps below for manual installation.
+
+### 1️⃣ Become root
+
 ```bash
 sudo su
 ```
+
 ---
 
-## Passo 1: Atualização do Sistema
-
-Atualize os pacotes do sistema.
+### 2️⃣ Update the system
 
 ```bash
 apt update && apt upgrade -y
@@ -28,9 +34,7 @@ apt update && apt upgrade -y
 
 ---
 
-## Passo 2: Instalação dos Pacotes Essenciais
-
-Instale o Apache, MariaDB, PHP e demais dependências.
+### 3️⃣ Install required packages
 
 ```bash
 apt install -y apache2 mariadb-server php php-{cli,apache2,gd,imap,ldap,mysql,xml,mbstring,xmlrpc,zip,bcmath,intl,redis} wget unzip
@@ -38,9 +42,7 @@ apt install -y apache2 mariadb-server php php-{cli,apache2,gd,imap,ldap,mysql,xm
 
 ---
 
-## Passo 3: Configuração do Fuso Horário e NTP (Opcional)
-
-Configure o fuso horário e, se desejar, instale o NTP para sincronização de hora.
+### 4️⃣ (Optional) Configure timezone and NTP
 
 ```bash
 apt install -y openntpd && systemctl enable openntpd && systemctl start openntpd
@@ -49,9 +51,7 @@ dpkg-reconfigure tzdata
 
 ---
 
-## Passo 4: Configuração Segura do MariaDB
-
-Execute o script de segurança do MariaDB.
+### 5️⃣ Secure MariaDB
 
 ```bash
 mysql_secure_installation
@@ -59,14 +59,12 @@ mysql_secure_installation
 
 ---
 
-## Passo 5: Criação do Banco de Dados e Usuário no MariaDB
-
-Crie o banco de dados e o usuário para o GLPI.
+### 6️⃣ Create database and user
 
 ```bash
 mysql -u root -p <<EOF
 CREATE DATABASE glpi CHARACTER SET utf8mb4;
-CREATE USER 'glpiuser'@'localhost' IDENTIFIED BY 'SUA_SENHA';
+CREATE USER 'glpiuser'@'localhost' IDENTIFIED BY 'YOUR_PASSWORD';
 GRANT ALL PRIVILEGES ON glpi.* TO 'glpiuser'@'localhost';
 FLUSH PRIVILEGES;
 EXIT;
@@ -75,9 +73,7 @@ EOF
 
 ---
 
-## Passo 6: Download e Extração do GLPI
-
-Baixe a versão desejada do GLPI e extraia os arquivos no diretório do Apache.
+### 7️⃣ Download and extract GLPI
 
 ```bash
 cd /tmp
@@ -88,9 +84,7 @@ mv glpi /var/www/html/glpi
 
 ---
 
-## Passo 7: Ajuste de Permissões dos Arquivos do GLPI
-
-Configure as permissões corretas para os arquivos do GLPI.
+### 8️⃣ Set correct permissions
 
 ```bash
 chown -R www-data:www-data /var/www/html/glpi
@@ -100,14 +94,12 @@ find /var/www/html/glpi -type f -exec chmod 644 {} \;
 
 ---
 
-## Passo 8: Configuração do VirtualHost do Apache para o GLPI
-
-Crie um VirtualHost para que o GLPI seja acessível pelo domínio ou IP.
+### 9️⃣ Configure Apache VirtualHost
 
 ```bash
 cat <<EOF > /etc/apache2/sites-available/glpi.conf
 <VirtualHost *:80>
-    ServerName SEU_DOMINIO_OU_IP
+    ServerName YOUR_DOMAIN_OR_IP
     DocumentRoot /var/www/html/glpi/public
     <Directory /var/www/html/glpi/public>
         AllowOverride All
@@ -117,9 +109,6 @@ cat <<EOF > /etc/apache2/sites-available/glpi.conf
 </VirtualHost>
 EOF
 ```
-
-
-Crie um arquivo de configuração para o diretório público do GLPI e habilite-o.
 
 ```bash
 cat > /etc/apache2/conf-available/glpi-web.conf << EOF
@@ -142,9 +131,10 @@ cat > /etc/apache2/conf-available/glpi-web.conf << EOF
 </Directory>
 EOF
 ```
+
 ---
 
-## Passo 9: Ativação do VirtualHost e Reinicialização do Apache
+### 🔄 Enable modules and restart Apache
 
 ```bash
 a2enmod rewrite
@@ -154,15 +144,17 @@ systemctl restart apache2
 systemctl reload apache2
 ```
 
-*Nota: Se desejar utilizar o nome "glpi-web.conf", adapte o comando `a2enconf` para utilizar esse nome.*
-
 ---
 
-## Passo 11: Finalização
+### ✅ Finish via browser
 
-Após configurar o Apache, acesse o GLPI via navegador (http://SEU_DOMINIO_OU_IP/install/install.php) e conclua a instalação pela interface web. 
+Access the installer:
 
-Ao finalizar, remova o diretório de instalação.
+```
+http://YOUR_DOMAIN_OR_IP/install/install.php
+```
+
+Complete the setup via the web interface, then remove the installer:
 
 ```bash
 rm -rf /var/www/html/glpi/install
@@ -170,12 +162,11 @@ rm -rf /var/www/html/glpi/install
 
 ---
 
-# REMOÇÃO Automatizada
+## ❌ Automated Removal
 
-Execute o seguinte comando no terminal para remover o glpi e suas dependências
+To uninstall GLPI and related dependencies:
+
 ```bash
 sudo bash -c "$(wget -qLO - https://raw.githubusercontent.com/rafaelhschuh/glpi-install/refs/heads/main/auto-remove.sh)"
 ```
 
-
-Este README.md reúne os passos para uma instalação funcional do GLPI no Debian. Certifique-se de ajustar os valores conforme necessário e consulte a documentação oficial do GLPI para detalhes adicionais e atualizações.
